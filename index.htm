@@ -63,7 +63,7 @@
     <button id="askAnotherQuestion">Ask another question</button>
   </div>
   <script>
-    const apiKey = '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';
+    const apiKey = process.env.OPENAI_API_KEY;
 
     document.getElementById('bookQueryForm').addEventListener('submit', async function (event) {
       event.preventDefault();

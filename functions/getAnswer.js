@@ -2,14 +2,15 @@ const fetch = require('node-fetch');
 
 exports.handler = async function (event, context) {
   const { bookTitle, bookAuthor, currentPage, userQuestion } = JSON.parse(event.body);
-
   const prompt = `You will act as an expert on ${bookTitle} written by ${bookAuthor}. I am on page ${currentPage} of ${bookTitle} and I have a question about the book, but to avoid giving away any spoilers, only use information from pages 1-${currentPage} when answering my question. My question is: ${userQuestion}`;
+
+  const apiKey = process.env.OPENAI_API_KEY;
 
   const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       prompt: prompt,
@@ -25,6 +26,6 @@ exports.handler = async function (event, context) {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ answer }),
+    body: JSON.stringify({ answer: answer }),
   };
 };

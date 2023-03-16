@@ -63,50 +63,46 @@
     <button id="askAnotherQuestion">Ask another question</button>
   </div>
   <script>
-    const apiKey = process.env.OPENAI_API_KEY;
+document.getElementById('bookQueryForm').addEventListener('submit', async function (event) {
+  event.preventDefault();
 
-    document.getElementById('bookQueryForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
+  const bookTitle = document.getElementById('bookTitle').value;
+  const bookAuthor = document.getElementById('bookAuthor').value;
+  const currentPage = document.getElementById('currentPage').value;
+  const userQuestion = document.getElementById('userQuestion').value;
 
-      const bookTitle = document.getElementById('bookTitle').value;
-      const bookAuthor = document.getElementById('bookAuthor').value;
-      const currentPage = document.getElementById('currentPage').value;
-      const userQuestion = document.getElementById('userQuestion').value;
+  const response = await fetch('/.netlify/functions/getAnswer', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      bookTitle,
+      bookAuthor,
+      currentPage,
+      userQuestion,
+    }),
+  });
 
-      const prompt = `You will act as an expert on ${bookTitle} written by ${bookAuthor}. I am on page ${currentPage} of ${bookTitle} and I have a question about the book, but to avoid giving away any spoilers, only use information from pages 1-${currentPage} when answering my question. My question is: ${userQuestion}`;
+  const responseData = await response.json();
+  const answer = responseData.answer;
 
-      const response = await fetch('/.netlify/functions/getAnswer', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    bookTitle,
-    bookAuthor,
-    currentPage,
-    userQuestion,
-  }),
+  document.getElementById('answer').textContent = answer;
+  document.getElementById('questionPage').style.display = 'none';
+  document.getElementById('answerPage').style.display = 'block';
 });
 
-const responseData = await response.json();
-const answer = responseData.answer;
+document.getElementById('askAnotherQuestion').addEventListener('click', function () {
+  document.getElementById('questionPage').style.display = 'block';
+  document.getElementById('answerPage').style.display = 'none';
 
+  // Clear form input fields
+  document.getElementById('bookTitle').value = '';
+  document.getElementById('bookAuthor').value = '';
+  document.getElementById('currentPage').value = '';
+  document.getElementById('userQuestion').value = '';
+});
 
-      document.getElementById('answer').textContent = answer;
-      document.getElementById('questionPage').style.display = 'none';
-      document.getElementById('answerPage').style.display = 'block';
-    });
-
-    document.getElementById('askAnotherQuestion').addEventListener('click', function () {
-      document.getElementById('questionPage').style.display = 'block';
-      document.getElementById('answerPage').style.display = 'none';
-
-      // Clear form input fields
-      document.getElementById('bookTitle').value = '';
-      document.getElementById('bookAuthor').value = '';
-      document.getElementById('currentPage').value = '';
-      document.getElementById('userQuestion').value = '';
-    });
   </script>
 </body>
 </html>

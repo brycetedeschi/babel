@@ -1,3 +1,2 @@
 [build]
-  command = "echo \"Build completed\""
   functions = "functions"

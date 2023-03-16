@@ -85,22 +85,15 @@ document.getElementById('bookQueryForm').addEventListener('submit', async functi
   });
 
   const responseData = await response.json();
+  console.log('Response data:', responseData); // Debugging line
+
   const answer = responseData.answer;
+
+  console.log('Answer:', answer); // Debugging line
 
   document.getElementById('answer').textContent = answer;
   document.getElementById('questionPage').style.display = 'none';
   document.getElementById('answerPage').style.display = 'block';
-});
-
-document.getElementById('askAnotherQuestion').addEventListener('click', function () {
-  document.getElementById('questionPage').style.display = 'block';
-  document.getElementById('answerPage').style.display = 'none';
-
-  // Clear form input fields
-  document.getElementById('bookTitle').value = '';
-  document.getElementById('bookAuthor').value = '';
-  document.getElementById('currentPage').value = '';
-  document.getElementById('userQuestion').value = '';
 });
 
   </script>
